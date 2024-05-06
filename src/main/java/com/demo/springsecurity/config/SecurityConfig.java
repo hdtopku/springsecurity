@@ -13,8 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
-
 /**
  * @author lxh
  * @Description 使用的是 SpringSecutiry 的默认配置，不需要额外配置
@@ -31,15 +29,12 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         // 禁用CSRF
         http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(auth ->
-                auth.requestMatchers("/hello/admin").hasRole("admin")
-                        .requestMatchers("/hello/user").access(hasAuthority("user:read"))
-                        .requestMatchers("/hello/user/vip").hasAuthority("user:vip")
-                        .requestMatchers("/to_login", "*/*.js").permitAll()
-                        .anyRequest().authenticated());
-        http.formLogin(form -> form.loginPage("/to_login")
-                .loginProcessingUrl("/doLogin")
-                .defaultSuccessUrl("/index"));
+//        基于 http 请求的权限控制
+//        http.authorizeHttpRequests(auth -> auth.requestMatchers("/hello/admin").hasRole("ADMIN").requestMatchers("/hello/user").hasAuthority("USER:READ").requestMatchers("/hello/user/vip").hasAuthority("USER:VIP"));
+
+        //登录页和资源放行
+        http.authorizeHttpRequests(auth -> auth.requestMatchers("/to_login", "*/*.js").permitAll().anyRequest().authenticated());
+        http.formLogin(form -> form.loginPage("/to_login").loginProcessingUrl("/doLogin").defaultSuccessUrl("/index"));
         return http.build();
     }
 
@@ -48,9 +43,8 @@ public class SecurityConfig {
 //        定义用户信息
         // 这种写法不正确，因为后面的authorities("user:read")，会覆盖前面的.roles("admin")
         // UserDetails userDetails = User.withUsername("admin").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u").roles("admin").authorities("user:read").build();
-        UserDetails userDetails = User.withUsername("admin").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u").authorities("user:read", "ROLE_admin", "user:vip").build();
-        UserDetails userDetails2 = User.withUsername("user").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u")
-                .authorities("user:read").build();
+        UserDetails userDetails = User.withUsername("admin").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u").authorities("USER:READ", "ROLE_ADMIN", "USER:VIP").build();
+        UserDetails userDetails2 = User.withUsername("user").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u").authorities("USER:READ").build();
         InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
         inMemoryUserDetailsManager.createUser(userDetails);
         inMemoryUserDetailsManager.createUser(userDetails2);

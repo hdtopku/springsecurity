@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @createTime 2024-05-06 12:35:42
  */
 @Controller
-public class PageController {
+public class LoginController {
     @GetMapping("/to_login")
     public String login() {
         return "login";
