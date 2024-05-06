@@ -1,6 +1,8 @@
 spring:
-  security:
-    user:
-      name: admin
-      password: password
-      roles: USER, ADMIN
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: jdbc:mysql://121.41.170.120:3306/test?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: wz95ctxb3hvxezu57ko
+    driver-class-name: com.mysql.cj.jdbc.Driver
