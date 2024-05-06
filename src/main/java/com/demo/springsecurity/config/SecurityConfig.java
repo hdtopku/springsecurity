@@ -2,6 +2,7 @@ package com.demo.springsecurity.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -11,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAuthority;
 
 /**
  * @author lxh
@@ -22,6 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -29,7 +33,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(auth ->
                 auth.requestMatchers("/hello/admin").hasRole("admin")
-                        .requestMatchers("/hello/user").hasRole("user")
+                        .requestMatchers("/hello/user").access(hasAuthority("user:read"))
+                        .requestMatchers("/hello/user/vip").hasAuthority("user:vip")
                         .requestMatchers("/to_login", "*/*.js").permitAll()
                         .anyRequest().authenticated());
         http.formLogin(form -> form.loginPage("/to_login")
@@ -41,9 +46,11 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
 //        定义用户信息
-        UserDetails userDetails = User.withUsername("admin").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u") // {noop}表示明文密码
-                .roles("admin", "user").build();
-        UserDetails userDetails2 = User.withUsername("user").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u").roles("user").build();
+        // 这种写法不正确，因为后面的authorities("user:read")，会覆盖前面的.roles("admin")
+        // UserDetails userDetails = User.withUsername("admin").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u").roles("admin").authorities("user:read").build();
+        UserDetails userDetails = User.withUsername("admin").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u").authorities("user:read", "ROLE_admin", "user:vip").build();
+        UserDetails userDetails2 = User.withUsername("user").password("$2a$10$MWGKcUtZU/Cg5A.XamKyEuEMnebenPwho4WP2tdV8j.GgKUvrOv4u")
+                .authorities("user:read").build();
         InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
         inMemoryUserDetailsManager.createUser(userDetails);
         inMemoryUserDetailsManager.createUser(userDetails2);

@@ -21,4 +21,9 @@ public class HelloController {
     public String helloUser() {
         return "Hello, User!";
     }
+
+    @GetMapping("/user/vip")
+    public String helloUserVip() {
+        return "Hello, User VIP!";
+    }
 }
