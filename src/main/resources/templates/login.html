@@ -1,0 +1,20 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>自定义登录页面</title>
+</head>
+<body>
+<form method="post" th:action="@{/doLogin}">
+    <label for="username">用户名:</label>
+    <input id="username" name="username" required type="text">
+    <br>
+    <label for="password">密码:</label>
+    <input id="password" name="password" required type="password">
+    <br>
+    <input type="submit" value="登录">
+</form>
+</body>
+</html>
