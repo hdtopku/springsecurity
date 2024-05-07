@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author lxh
@@ -39,10 +41,15 @@ public class UmsSysUser implements java.io.Serializable, UserDetails {
     private Integer deleted;
     private String remark;
 
+    //    角色信息
+    private Set<UmsRole> roleSet = new HashSet<>();
+    //    权限信息
+    private Set<String> perms = new HashSet<>();
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return perms.stream().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override

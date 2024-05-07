@@ -27,8 +27,9 @@ public class UmsSysUserServiceImpl extends ServiceImpl<UmsSysUserMapper, UmsSysU
     @Override
     public String login(String username, String password) {
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(username, password);
+        Authentication authenticate = null;
         try {
-            authenticationManager.authenticate(authenticationRequest);
+            authenticate = authenticationManager.authenticate(authenticationRequest);
         } catch (BadCredentialsException | UsernameNotFoundException e) {
             log.error("登录失败：{}", e.getMessage());
             return "用户名或密码错误";
@@ -43,6 +44,7 @@ public class UmsSysUserServiceImpl extends ServiceImpl<UmsSysUserMapper, UmsSysU
         } catch (Exception e) {
             return String.format("登录失败：%s", e.getMessage());
         }
+//        UmsSysUser user = (UmsSysUser) authenticate.getPrincipal();
         return UUID.randomUUID().toString().replace("-", "");
     }
 }
