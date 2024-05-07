@@ -1,7 +1,6 @@
 package com.demo.springsecurity.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * 3、废弃了很多方法，比如 and()方法，建议使用 Lambda 表示实现
  * @createTime 2024-05-06 08:26:13
  */
-@Configuration
+//@Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {

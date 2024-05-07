@@ -19,7 +19,7 @@ public class AuthController {
     @Resource
     private IUmsSysUserService umsSysUserService;
 
-    @PostMapping
+    @PostMapping("/login")
     public String login(@RequestBody LoginParams loginParams) {
         return umsSysUserService.login(loginParams.getUsername(), loginParams.getPassword());
     }
