@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author lxh
  * @Description
@@ -20,7 +23,12 @@ public class AuthController {
     private IUmsSysUserService umsSysUserService;
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginParams loginParams) {
-        return umsSysUserService.login(loginParams.getUsername(), loginParams.getPassword());
+    public Map<String, Object> login(@RequestBody LoginParams loginParams) {
+        String token = umsSysUserService.login(loginParams.getUsername(), loginParams.getPassword());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("token", token);
+        map.put("code", 200);
+        map.put("msg", "success");
+        return map;
     }
 }
