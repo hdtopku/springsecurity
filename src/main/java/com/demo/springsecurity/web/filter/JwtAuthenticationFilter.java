@@ -38,7 +38,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.setCharacterEncoding("utf-8");
                 response.setStatus(401);
                 response.getWriter().write("token invalid");
-                response.getWriter().flush();
                 return;
             }
             UmsSysUser user = new UmsSysUser();
