@@ -35,4 +35,4 @@ build/
 /src/test/.env
 .env
 /src/main/resources/rebel.xml
-TestController
+TestController.java
