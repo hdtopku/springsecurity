@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -15,12 +16,14 @@ import java.time.LocalDateTime;
 @Data
 @TableName("ums_menu")
 public class UmsMenu implements java.io.Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     @TableId
     private Long id;
 
     private Long parentId;
     private String menuName;
+    private String path;
     private Integer sort;
     private String perms;
     private Integer menuType;
